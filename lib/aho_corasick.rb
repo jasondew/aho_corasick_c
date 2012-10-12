@@ -3,7 +3,7 @@ require "ffi"
 module AhoCorasick
   module C
     extend FFI::Library
-    ffi_lib "ext/ahocorasick.bundle"
+    ffi_lib File.dirname(__FILE__) + "/ahocorasick.so"
 
     class MatchStruct < FFI::Struct
       layout :pattern, :pointer,

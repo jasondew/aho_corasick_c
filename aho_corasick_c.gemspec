@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/aho_corasick/version', __FILE__)
+require File.expand_path("../lib/aho_corasick/version", __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Jason Dew"]
@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.extensions    = %w{ext/extconf.rb}
   gem.name          = "aho_corasick_c"
   gem.require_paths = ["lib"]
   gem.version       = AhoCorasick::VERSION

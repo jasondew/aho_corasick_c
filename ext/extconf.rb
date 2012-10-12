@@ -19,3 +19,5 @@ install:
 	cc -shared -o ahocorasick.so ahocorasick.o node.o
 	mv ahocorasick.so ../lib/
 EOT
+
+File.open("Makefile", "w") {|f| f.puts MAKEFILE }
