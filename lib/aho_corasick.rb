@@ -100,7 +100,7 @@ module AhoCorasick
     end
 
     def string_pointer(string)
-      FFI::MemoryPointer.from_string(string.to_s)
+      FFI::MemoryPointer.from_string(string.to_s.dup)
     end
   end
 end
