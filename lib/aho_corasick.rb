@@ -69,7 +69,7 @@ module AhoCorasick
 
       ac_automata_search(trie, text.pointer, nil)
 
-      @matches
+      @matches.dup
     end
 
     private
