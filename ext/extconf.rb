@@ -1,6 +1,6 @@
 MAKEFILE = <<-EOT
 LIBNAME := libahocorasick.a
-CFLAGS := -Wall
+CFLAGS := -Wall -fPIC
 HEADERS := actypes.h ahocorasick.h node.h
 
 $(LIBNAME): ahocorasick.o node.o
