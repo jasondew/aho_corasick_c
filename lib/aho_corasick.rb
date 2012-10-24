@@ -41,13 +41,13 @@ module AhoCorasick
     attr_reader :trie
 
     def initialize(dictionary)
-      @matches = []
+      @@matches = []
       @callback = lambda do |match_pointer, void_pointer|
         match = MatchStruct.new(match_pointer)
         pattern = PatternStruct.new(match[:pattern])
-        @matches << Match.new(pattern[:representative].get_string(0),
-                              pattern[:string].get_string(0),
-                              match[:position] - pattern[:length])
+        @@matches << Match.new(pattern[:representative].get_string(0),
+                               pattern[:string].get_string(0),
+                               match[:position] - pattern[:length])
         return 0
       end
       @trie = ac_automata_init(@callback)
@@ -60,7 +60,7 @@ module AhoCorasick
     end
 
     def matches(string)
-      @matches.clear
+      @@matches.clear
       reset
 
       text = TextStruct.new
@@ -69,7 +69,7 @@ module AhoCorasick
 
       ac_automata_search(trie, text.pointer, nil)
 
-      @matches.dup
+      @@matches.dup
     end
 
     private
