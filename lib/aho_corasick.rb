@@ -42,8 +42,8 @@ module AhoCorasick
       match_struct = MatchStruct.new(match_pointer)
       pattern_struct = PatternStruct.new(match_struct[:pattern])
 
-      match = OpenStruct.new representative: pattern_struct[:representative].read_string,
-                             matched: pattern_struct[:string].read_string,
+      match = OpenStruct.new representative: pattern_struct[:representative].read_string.dup,
+                             matched: pattern_struct[:string].read_string.dup,
                              position: match_struct[:position] - pattern_struct[:length]
 
       @@callback.call match
