@@ -64,12 +64,16 @@ module AhoCorasick
 
     def matches(string)
       reset
+      GC.disable
 
       text = TextStruct.new
       text[:string] = string_pointer(string)
       text[:length] = string.length
 
       ac_automata_search(trie, text.pointer, nil)
+
+    ensure
+      GC.enable
     end
 
     private
