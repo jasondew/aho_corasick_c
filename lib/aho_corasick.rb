@@ -36,21 +36,24 @@ module AhoCorasick
   class Search
     include C
 
-    Match = Struct.new(:representative, :matched, :position)
-
     attr_reader :trie
 
-    def initialize(dictionary)
-      @@matches = []
-      @callback = lambda do |match_pointer, void_pointer|
-        match = MatchStruct.new(match_pointer)
-        pattern = PatternStruct.new(match[:pattern])
-        @@matches << Match.new(pattern[:representative].get_string(0),
-                               pattern[:string].get_string(0),
-                               match[:position] - pattern[:length])
-        return 0
-      end
-      @trie = ac_automata_init(@callback)
+    CALLBACK = lambda {|match_pointer, void_pointer|
+      match = MatchStruct.new(match_pointer)
+      pattern = PatternStruct.new(match[:pattern])
+
+      representative = pattern[:representative].read_string.dup
+      matched = pattern[:string].read_string.dup
+      position = match[:position] - pattern[:length]
+
+      @callback.call representative, matched, position
+
+      return 0
+    }
+
+    def initialize(dictionary, &callback)
+      @callback = callback
+      @trie = ac_automata_init(CALLBACK)
 
       dictionary.each do |key, values|
         values.each {|value| add(key, value) }
@@ -60,7 +63,6 @@ module AhoCorasick
     end
 
     def matches(string)
-      @@matches.clear
       reset
 
       text = TextStruct.new
@@ -68,8 +70,6 @@ module AhoCorasick
       text[:length] = string.length
 
       ac_automata_search(trie, text.pointer, nil)
-
-      @@matches.dup
     end
 
     private
