@@ -39,14 +39,14 @@ module AhoCorasick
     attr_reader :trie
 
     CALLBACK = lambda {|match_pointer, void_pointer|
-      match = MatchStruct.new(match_pointer)
-      pattern = PatternStruct.new(match[:pattern])
+      match_struct = MatchStruct.new(match_pointer)
+      pattern_struct = PatternStruct.new(match_struct[:pattern])
 
-      representative = pattern[:representative].read_string.dup
-      matched = pattern[:string].read_string.dup
-      position = match[:position] - pattern[:length]
+      match = OpenStruct.new representative: pattern_struct[:representative].read_string,
+                             matched: pattern_struct[:string].read_string,
+                             position: match_struct[:position] - pattern_struct[:length]
 
-      @@callback.call representative, matched, position
+      @@callback.call match
 
       return 0
     }
@@ -62,7 +62,7 @@ module AhoCorasick
       finalize
     end
 
-    def matches(string)
+    def match(string)
       reset
       GC.disable
 
@@ -71,7 +71,6 @@ module AhoCorasick
       text[:length] = string.length
 
       ac_automata_search(trie, text.pointer, nil)
-
     ensure
       GC.enable
     end
