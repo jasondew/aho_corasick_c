@@ -46,13 +46,13 @@ module AhoCorasick
       matched = pattern[:string].read_string.dup
       position = match[:position] - pattern[:length]
 
-      @callback.call representative, matched, position
+      @@callback.call representative, matched, position
 
       return 0
     }
 
     def initialize(dictionary, &callback)
-      @callback = callback
+      @@callback = callback
       @trie = ac_automata_init(CALLBACK)
 
       dictionary.each do |key, values|
