@@ -64,7 +64,7 @@ module AhoCorasick
 
     def match(string)
       reset
-      GC.disable
+      loop { break if GC.disable }
 
       text = TextStruct.new
       text[:string] = string_pointer(string)
